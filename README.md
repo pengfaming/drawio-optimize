@@ -108,6 +108,10 @@ python3 scripts/optimize.py \
 
 另有 `soc_dft`、`cpu_block`、`api_flow` 三个模板与中文 TB 示例 `assets/examples/cjk_tb.yaml`。
 
+![中文标签 + TB 方向示例](docs/img/cjk-tb.png)
+
+*`assets/examples/cjk_tb.yaml`：中文标签用真实字体度量排版。跨容器下行线在容器标题带处仍有一段绕行（报告记为 `R11 info: 410px vs 160px direct`），属于已知限制，不是静默忽略的缺陷。*
+
 ### 产物
 
 | 文件 | 内容 |
