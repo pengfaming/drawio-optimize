@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+out/
+pnr-out/
+render/
+drc/
+atlas-fixed/
+/tmp-*
+.DS_Store

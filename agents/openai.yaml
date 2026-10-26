@@ -1,0 +1,4 @@
+interface:
+  display_name: "Draw.io Optimize"
+  short_description: "Optimize, minimally repair, route and DRC-check editable Draw.io diagrams"
+  default_prompt: "Use $drawio-optimize to generate or repair an editable Draw.io architecture diagram. For an existing large hand-authored drawing, use --repair-only; then run DRC and render."

@@ -1,0 +1,85 @@
+title: SoC DFT Architecture
+direction: LR
+preset: balanced
+groups:
+  - id: jtag_domain
+    label: JTAG / TAP Domain
+  - id: scan_domain
+    label: Scan & MBIST Domain
+nodes:
+  - id: jtag
+    label: JTAG Port
+    kind: interface
+    group: jtag_domain
+  - id: tap
+    label: TAP Controller
+    kind: controller
+    group: jtag_domain
+  - id: atpg
+    label: ATPG Engine
+    kind: controller
+    group: scan_domain
+  - id: scan_ctrl
+    label: Scan Controller
+    kind: controller
+    group: scan_domain
+  - id: scan_chains
+    label: Scan Chains
+    kind: datapath
+    group: scan_domain
+  - id: mbist
+    label: MBIST Controller
+    kind: controller
+    group: scan_domain
+  - id: sram
+    label: SRAM Array
+    kind: memory
+    group: scan_domain
+  - id: clk_rst
+    label: Clock / Reset
+    kind: clock
+edges:
+  - from: jtag
+    to: tap
+    label: TCK / TMS
+    signal: control
+  - from: tap
+    to: scan_ctrl
+    label: scan_en
+    signal: control
+  - from: tap
+    to: mbist
+    label: mbist_en
+    signal: control
+  - from: atpg
+    to: scan_ctrl
+    label: pattern
+    signal: control
+  - from: scan_ctrl
+    to: scan_chains
+    label: scan_in
+    signal: data
+  - from: scan_chains
+    to: scan_ctrl
+    label: scan_out
+    signal: data
+  - from: mbist
+    to: sram
+    label: bist_addr
+    signal: data
+  - from: clk_rst
+    to: tap
+    label: tck
+    signal: clock
+  - from: clk_rst
+    to: scan_ctrl
+    label: scan_clk
+    signal: clock
+  - from: clk_rst
+    to: mbist
+    label: bist_clk
+    signal: clock
+constraints:
+  h_gap: 96
+  v_gap: 46
+  uniform_kinds: true

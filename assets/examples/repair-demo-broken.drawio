@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="drawio-optimize" agent="drawio-optimize">
+  <diagram id="pnr-page" name="Page-1">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="br" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1" value="Browser">
+          <mxGeometry x="30" y="170" width="130" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="cache" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;" vertex="1" parent="1" value="Redis">
+          <mxGeometry x="670" y="280" width="150" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="db" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;" vertex="1" parent="1" value="Database">
+          <mxGeometry x="670" y="60" width="150" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="gw" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1" value="API Gateway">
+          <mxGeometry x="220" y="160" width="150" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="ord" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" vertex="1" parent="1" value="Order Service">
+          <mxGeometry x="430" y="60" width="150" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="pay" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" vertex="1" parent="1" value="Payment">
+          <mxGeometry x="430" y="280" width="150" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="orthogonal=1;rounded=0;html=1;endArrow=block;endFill=1;endSize=7;strokeWidth=1.5;strokeColor=#1d4ed8;fontSize=10;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;pnrSignal=data;edgeStyle=none;" edge="1" parent="1" source="br" target="gw" value="POST /orders">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="orthogonal=1;rounded=0;html=1;endArrow=block;endFill=1;endSize=7;strokeWidth=1.5;strokeColor=#1d4ed8;fontSize=10;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;pnrSignal=data;edgeStyle=none;" edge="1" parent="1" source="gw" target="ord" value="create">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="181" />
+              <mxPoint x="400" y="97" />
+              <mxPoint x="442" y="97" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" style="orthogonal=1;rounded=0;html=1;endArrow=block;endFill=1;endSize=7;strokeWidth=1.5;strokeColor=#1d4ed8;fontSize=10;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;pnrSignal=data;edgeStyle=none;" edge="1" parent="1" source="ord" target="pay" value="charge">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="505" y="200" />
+              <mxPoint x="527" y="200" />
+              <mxPoint x="527" y="245" />
+              <mxPoint x="505" y="245" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" style="orthogonal=1;rounded=0;html=1;endArrow=block;endFill=1;endSize=7;strokeWidth=1.5;strokeColor=#1d4ed8;fontSize=10;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;pnrSignal=data;edgeStyle=none;" edge="1" parent="1" source="ord" target="db" value="insert">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="orthogonal=1;rounded=0;html=1;endArrow=block;endFill=1;endSize=7;strokeWidth=1.5;strokeColor=#1d4ed8;fontSize=10;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=1;exitY=0.35;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;pnrSignal=data;edgeStyle=none;" edge="1" parent="1" source="pay" target="db" value="commit">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="612" y="306" />
+              <mxPoint x="612" y="250" />
+              <mxPoint x="640" y="250" />
+              <mxPoint x="640" y="210" />
+              <mxPoint x="668" y="210" />
+              <mxPoint x="668" y="170" />
+              <mxPoint x="700" y="170" />
+              <mxPoint x="700" y="134" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" style="orthogonal=1;rounded=0;html=1;endArrow=block;endFill=1;endSize=7;strokeWidth=1.5;strokeColor=#1d4ed8;fontSize=10;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;pnrSignal=data;edgeStyle=none;" edge="1" parent="1" source="gw" target="cache" value="reserve">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="258" y="300" />
+              <mxPoint x="258" y="317" />
+              <mxPoint x="612" y="317" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" style="orthogonal=1;rounded=0;html=1;endArrow=block;endFill=1;endSize=7;strokeWidth=1.5;strokeColor=#b45309;fontSize=10;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;pnrSignal=data;edgeStyle=none;" edge="1" parent="1" source="gw" target="pay" value="charge">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="258" y="300" />
+              <mxPoint x="258" y="326" />
+              <mxPoint x="430" y="326" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

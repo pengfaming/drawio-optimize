@@ -1,0 +1,95 @@
+title: Microservice Architecture
+direction: LR
+preset: balanced
+groups:
+  - id: edge
+    label: Edge
+  - id: services
+    label: Domain Services
+  - id: data
+    label: Data & Messaging
+nodes:
+  - id: client
+    label: Client
+    kind: external
+    group: edge
+  - id: gateway
+    label: API Gateway
+    kind: interface
+    group: edge
+  - id: auth
+    label: Auth Service
+    kind: interface
+    group: edge
+  - id: user
+    label: User Service
+    kind: controller
+    group: services
+  - id: order
+    label: Order Service
+    kind: controller
+    group: services
+  - id: payment
+    label: Payment Service
+    kind: controller
+    group: services
+  - id: inventory
+    label: Inventory Service
+    kind: controller
+    group: services
+  - id: kafka
+    label: Kafka
+    kind: memory
+    group: data
+  - id: redis
+    label: Redis Cache
+    kind: memory
+    group: data
+  - id: pg
+    label: PostgreSQL
+    kind: memory
+    group: data
+edges:
+  - from: client
+    to: gateway
+    label: HTTPS
+    signal: data
+  - from: gateway
+    to: auth
+    label: token
+    signal: control
+  - from: gateway
+    to: user
+    label: /users
+    signal: data
+  - from: gateway
+    to: order
+    label: /orders
+    signal: data
+  - from: order
+    to: payment
+    label: charge
+    signal: data
+  - from: order
+    to: inventory
+    label: reserve
+    signal: data
+  - from: order
+    to: kafka
+    label: order.created
+    signal: control
+  - from: user
+    to: pg
+    label: SQL
+    signal: data
+  - from: order
+    to: pg
+    label: SQL
+    signal: data
+  - from: user
+    to: redis
+    label: session
+    signal: data
+constraints:
+  h_gap: 96
+  v_gap: 46

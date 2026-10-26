@@ -1,0 +1,68 @@
+title: API Call Flow
+direction: LR
+preset: clean-routing
+nodes:
+  - id: client
+    label: Client
+    kind: external
+  - id: gateway
+    label: API Gateway
+    kind: interface
+  - id: auth
+    label: Auth
+    kind: controller
+  - id: service
+    label: Order Service
+    kind: controller
+  - id: cache
+    label: Cache
+    kind: memory
+  - id: db
+    label: Database
+    kind: memory
+  - id: queue
+    label: Event Queue
+    kind: memory
+  - id: worker
+    label: Worker
+    kind: controller
+edges:
+  - from: client
+    to: gateway
+    label: POST /orders
+    signal: data
+  - from: gateway
+    to: auth
+    label: validate
+    signal: control
+  - from: gateway
+    to: service
+    label: forward
+    signal: data
+  - from: service
+    to: cache
+    label: get
+    signal: data
+  - from: service
+    to: db
+    label: insert
+    signal: data
+  - from: service
+    to: queue
+    label: publish
+    signal: control
+  - from: queue
+    to: worker
+    label: consume
+    signal: data
+  - from: worker
+    to: db
+    label: update
+    signal: data
+  - from: service
+    to: gateway
+    label: 201 Created
+    signal: data
+constraints:
+  h_gap: 92
+  v_gap: 44

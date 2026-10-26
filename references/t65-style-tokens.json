@@ -1,0 +1,334 @@
+{
+  "reference_path": "T65_架构图_参考图复刻.drawio (local reference, not bundled)",
+  "reference_sha256": "5b1141b69b96c0fdec0f815903a8727a734682e3f5034e2467a48cf6a9537eb0",
+  "extracted_on": "2026-10-18",
+  "profiles": {
+    "system_body": {
+      "fillColor": "#F3F6FA",
+      "strokeColor": "#3E607F",
+      "fontColor": "#102D49",
+      "strokeWidth": 6.0,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "t65-system-frame"
+      ]
+    },
+    "system_title": {
+      "fillColor": "#102B46",
+      "strokeColor": "none",
+      "fontColor": "#FFFFFF",
+      "strokeWidth": 2.0,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "70",
+        "71"
+      ]
+    },
+    "major_body": {
+      "fillColor": "#E7EEF7",
+      "strokeColor": "#153D64",
+      "fontColor": "#102D49",
+      "strokeWidth": 6.0,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "2"
+      ]
+    },
+    "major_header": {
+      "fillColor": "#163F68",
+      "strokeColor": "none",
+      "fontColor": "#FFFFFF",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "t65-polish-2-band",
+        "87"
+      ]
+    },
+    "blue_body": {
+      "fillColor": "#E7F0FA",
+      "strokeColor": "#285B87",
+      "fontColor": "#102D49",
+      "strokeWidth": 3.0,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "415"
+      ]
+    },
+    "blue_header": {
+      "fillColor": "#B7CFE9",
+      "strokeColor": "none",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "t65-polish-415-band",
+        "416"
+      ]
+    },
+    "green_body": {
+      "fillColor": "#E2F1EA",
+      "strokeColor": "#247263",
+      "fontColor": "#102D49",
+      "strokeWidth": 3.0,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "457"
+      ]
+    },
+    "green_header": {
+      "fillColor": "#B4D9CB",
+      "strokeColor": "none",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "t65-polish-457-band",
+        "458"
+      ]
+    },
+    "gold_body": {
+      "fillColor": "#FFF0D9",
+      "strokeColor": "#965611",
+      "fontColor": "#102D49",
+      "strokeWidth": 3.0,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "88"
+      ]
+    },
+    "gold_header": {
+      "fillColor": "#E9BE83",
+      "strokeColor": "none",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "t65-polish-88-band",
+        "89"
+      ]
+    },
+    "purple_body": {
+      "fillColor": "#EDE5F6",
+      "strokeColor": "#67488E",
+      "fontColor": "#102D49",
+      "strokeWidth": 3.0,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "437"
+      ]
+    },
+    "purple_header": {
+      "fillColor": "#C8B8E0",
+      "strokeColor": "none",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "t65-polish-437-band",
+        "438"
+      ]
+    },
+    "slate_body": {
+      "fillColor": "#EEF3F8",
+      "strokeColor": "#3D5974",
+      "fontColor": "#102D49",
+      "strokeWidth": 3.0,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "91"
+      ]
+    },
+    "slate_header": {
+      "fillColor": "#CBD7E3",
+      "strokeColor": "none",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "t65-polish-91-band",
+        "92"
+      ]
+    },
+    "info_body": {
+      "fillColor": "#F6F9FC",
+      "strokeColor": "#3E607F",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.8,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "t65-task-explanation"
+      ]
+    },
+    "info_header": {
+      "fillColor": "#BCCFE2",
+      "strokeColor": "none",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.8,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "t65-task-explanation-header",
+        "t65-task-explanation-title"
+      ]
+    },
+    "detail_card": {
+      "fillColor": "#F6F9FC",
+      "strokeColor": "#7088A1",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "95"
+      ]
+    },
+    "blue_leaf": {
+      "fillColor": "#9DC5E7",
+      "strokeColor": "#285B87",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "snapshot-2-A-0"
+      ]
+    },
+    "green_leaf": {
+      "fillColor": "#A6D5C2",
+      "strokeColor": "#247263",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "snapshot-2-B-0"
+      ]
+    },
+    "gold_leaf": {
+      "fillColor": "#EFCE8D",
+      "strokeColor": "#946019",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "snapshot-2-C-0"
+      ]
+    },
+    "purple_leaf": {
+      "fillColor": "#BDA9DA",
+      "strokeColor": "#5E4384",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "125"
+      ]
+    },
+    "slate_leaf": {
+      "fillColor": "#CBD7E3",
+      "strokeColor": "#3D5974",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "snapshot-2-meta-0"
+      ]
+    },
+    "operator_detail": {
+      "fillColor": "#FFFFFF",
+      "strokeColor": "#67488E",
+      "fontColor": "#102D49",
+      "strokeWidth": 2.4,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "437-lane-function-set-0-g1"
+      ]
+    },
+    "status_badge": {
+      "fillColor": "#17675E",
+      "strokeColor": "none",
+      "fontColor": "#FFFFFF",
+      "strokeWidth": 2.0,
+      "rounded": 0,
+      "arcSize": 0,
+      "shadow": 0,
+      "fontFamily": "Noto Sans CJK SC",
+      "sample_cells": [
+        "73",
+        "74"
+      ]
+    }
+  },
+  "notes": [
+    "Header profiles combine actual band fill with its associated text cell color.",
+    "Body text without an explicit override resolves to the common #102D49.",
+    "Border widths are reference defaults; typography scales to the target drawing.",
+    "Reference engineering content, connectivity and coordinates are not copied."
+  ]
+}

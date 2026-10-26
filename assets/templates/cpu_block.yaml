@@ -1,0 +1,127 @@
+title: CPU Core Block Diagram
+direction: LR
+preset: balanced
+groups:
+  - id: frontend
+    label: Front-end
+  - id: backend
+    label: Back-end
+  - id: memory
+    label: Memory Subsystem
+nodes:
+  - id: pc
+    label: PC
+    kind: datapath
+    group: frontend
+  - id: l1i
+    label: L1 I-Cache
+    kind: memory
+    group: memory
+  - id: fetch
+    label: Fetch
+    kind: datapath
+    group: frontend
+  - id: decode
+    label: Decode
+    kind: datapath
+    group: frontend
+  - id: rename
+    label: Rename
+    kind: datapath
+    group: backend
+  - id: issue
+    label: Issue
+    kind: controller
+    group: backend
+  - id: regfile
+    label: Register File
+    kind: memory
+    group: backend
+  - id: alu0
+    label: ALU 0
+    kind: datapath
+    group: backend
+  - id: alu1
+    label: ALU 1
+    kind: datapath
+    group: backend
+  - id: lsu
+    label: LSU
+    kind: datapath
+    group: backend
+  - id: l1d
+    label: L1 D-Cache
+    kind: memory
+    group: memory
+  - id: wb
+    label: Write-back
+    kind: datapath
+    group: backend
+  - id: branch
+    label: Branch Unit
+    kind: controller
+    group: backend
+edges:
+  - from: pc
+    to: fetch
+    label: pc
+    signal: data
+  - from: l1i
+    to: fetch
+    label: instr
+    signal: data
+  - from: fetch
+    to: decode
+    label: if_id
+    signal: data
+  - from: decode
+    to: rename
+    label: uop
+    signal: data
+  - from: rename
+    to: issue
+    label: rob_tag
+    signal: data
+  - from: issue
+    to: alu0
+    label: alu_op
+    signal: control
+  - from: issue
+    to: alu1
+    label: alu_op
+    signal: control
+  - from: issue
+    to: lsu
+    label: mem_op
+    signal: control
+  - from: regfile
+    to: issue
+    label: operands
+    signal: data
+  - from: alu0
+    to: wb
+    label: result
+    signal: data
+  - from: alu1
+    to: wb
+    label: result
+    signal: data
+  - from: lsu
+    to: l1d
+    label: ld/st
+    signal: data
+  - from: l1d
+    to: wb
+    label: load_data
+    signal: data
+  - from: wb
+    to: regfile
+    label: writeback
+    signal: data
+  - from: branch
+    to: fetch
+    label: redirect
+    signal: control
+constraints:
+  h_gap: 90
+  v_gap: 44

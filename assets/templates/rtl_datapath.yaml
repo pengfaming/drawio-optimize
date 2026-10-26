@@ -1,0 +1,117 @@
+title: RTL Datapath
+direction: LR
+preset: balanced
+groups:
+  - id: if_stage
+    label: IF
+  - id: id_stage
+    label: ID
+  - id: ex_stage
+    label: EX
+  - id: mem_stage
+    label: MEM / WB
+nodes:
+  - id: pc
+    label: PC
+    kind: datapath
+    group: if_stage
+  - id: imem
+    label: I-Mem
+    kind: memory
+    group: if_stage
+  - id: if_id
+    label: IF/ID
+    kind: datapath
+  - id: decode
+    label: Decode
+    kind: datapath
+    group: id_stage
+  - id: regfile
+    label: Regfile
+    kind: memory
+    group: id_stage
+  - id: id_ex
+    label: ID/EX
+    kind: datapath
+  - id: alu
+    label: ALU
+    kind: datapath
+    group: ex_stage
+  - id: imm
+    label: Imm Gen
+    kind: datapath
+    group: id_stage
+  - id: ex_mem
+    label: EX/MEM
+    kind: datapath
+  - id: dmem
+    label: D-Mem
+    kind: memory
+    group: mem_stage
+  - id: wb
+    label: Write-back
+    kind: datapath
+    group: mem_stage
+  - id: hazard
+    label: Hazard Unit
+    kind: controller
+edges:
+  - from: pc
+    to: imem
+    label: addr
+    signal: data
+  - from: imem
+    to: if_id
+    label: instr
+    signal: data
+  - from: if_id
+    to: decode
+    label: instr
+    signal: data
+  - from: decode
+    to: regfile
+    label: rs1/rs2
+    signal: data
+  - from: decode
+    to: id_ex
+    label: ctrl
+    signal: control
+  - from: imm
+    to: id_ex
+    label: imm
+    signal: data
+  - from: regfile
+    to: id_ex
+    label: operands
+    signal: data
+  - from: id_ex
+    to: alu
+    label: op_a/op_b
+    signal: data
+  - from: alu
+    to: ex_mem
+    label: result
+    signal: data
+  - from: ex_mem
+    to: dmem
+    label: addr/wdata
+    signal: data
+  - from: dmem
+    to: wb
+    label: rdata
+    signal: data
+  - from: wb
+    to: regfile
+    label: wb_data
+    signal: data
+  - from: hazard
+    to: pc
+    label: stall
+    signal: control
+  - from: hazard
+    to: if_id
+    label: flush
+    signal: control
+constraints:
+  h_gap: 88
+  v_gap: 42
