@@ -844,9 +844,11 @@ def _write_cells(graph: Graph, root_el: ET.Element) -> dict[str, str]:
             value = _html_value(e.label)
         el = _emit_cell(root_el, attrs, e.meta.get("wrapper"), value)
         geo = ET.SubElement(el, "mxGeometry", {"relative": "1", "as": "geometry"})
-        # A routed path replaces the authored waypoints.  If the edge was not
-        # routed (repair-only mode), keep the original waypoints untouched.
-        if e.path and len(e.path) > 2:
+        # A routed path replaces the authored waypoints.  A repaired edge can
+        # legitimately become a straight two-point path, so the old waypoints
+        # must be dropped rather than resurrected (that would re-draw the defect
+        # the fix just removed).
+        if e.path and (len(e.path) > 2 or e.waypoints):
             pts = e.path[1:-1]
         else:
             pts = list(e.waypoints)

@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="drawio-optimize" agent="drawio-optimize">
+  <diagram id="pnr-page" name="Page-1">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="decode" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" vertex="1" parent="1" value="Decode">
+          <mxGeometry x="320" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fetch" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" vertex="1" parent="1" value="Fetch">
+          <mxGeometry x="60" y="100" width="110" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="orthogonal=1;rounded=0;html=1;endArrow=block;endFill=1;endSize=7;strokeWidth=1.5;strokeColor=#1d4ed8;fontSize=11;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;pnrSignal=data;edgeStyle=none;" edge="1" parent="1" source="fetch" target="decode" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="130" />
+              <mxPoint x="200" y="50" />
+              <mxPoint x="300" y="50" />
+              <mxPoint x="300" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

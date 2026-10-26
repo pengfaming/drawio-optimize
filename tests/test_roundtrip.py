@@ -59,6 +59,34 @@ class RoundTripTest(unittest.TestCase):
             # the unsupported cell must not silently disappear
             self.assertEqual(len(load(out).preserved), 1)
 
+    def test_repaired_straight_edge_drops_authored_waypoints(self):
+        """A fix that straightens an edge must not resurrect the old waypoints."""
+        xml = (
+            '<mxfile host="t"><diagram id="p" name="p"><mxGraphModel><root>'
+            '<mxCell id="0"/><mxCell id="1" parent="0"/>'
+            '<mxCell id="a" value="A" style="rounded=0;html=1;" vertex="1" parent="1">'
+            '<mxGeometry x="0" y="0" width="100" height="60" as="geometry"/></mxCell>'
+            '<mxCell id="b" value="B" style="rounded=0;html=1;" vertex="1" parent="1">'
+            '<mxGeometry x="300" y="0" width="100" height="60" as="geometry"/></mxCell>'
+            '<mxCell id="e1" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;'
+            'exitDx=0;exitDy=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="a" target="b">'
+            '<mxGeometry relative="1" as="geometry"><Array as="points">'
+            '<mxPoint x="200" y="30"/><mxPoint x="200" y="90"/>'
+            '</Array></mxGeometry></mxCell>'
+            "</root></mxGraphModel></diagram></mxfile>"
+        )
+        with tmpdir() as d:
+            p = Path(d) / "z.drawio"
+            p.write_text(xml, encoding="utf-8")
+            g = load(p)
+            e = g.edges[0]
+            self.assertEqual(len(e.waypoints), 2)
+            # the repair produces a straight, two-point path
+            e.path = [(100.0, 30.0), (300.0, 30.0)]
+            out = Path(d) / "o.drawio"
+            write(g, out)
+            self.assertEqual(load(out).edges[0].waypoints, [])
+
 
 if __name__ == "__main__":
     unittest.main()

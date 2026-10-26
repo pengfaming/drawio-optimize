@@ -16,14 +16,14 @@
 
 手工维护 draw.io 工程图久了，几乎必然出现这些缺陷：
 
-| 症状 | 根因 |
-|---|---|
-| 箭头贴着框边「滑行」、指向错误 | 最后一段没有垂直进入节点边，draw.io 把折线裁到边框上 |
-| 连线穿过无关模块 | 没有把节点当障碍物 |
-| 标签被线压住 / 压在别的模块上 | 标签位置没有参与避让 |
-| 一串平行线挤成 10 px 间距 | 没有 bus lane 概念 |
-| 箭头前有个小 U 型回头钩 | 最后一个拐点离目标太近，留不出箭头长度 |
-| 连线绕大圈、多余折点 | 端点锚点与入线通道没对齐 |
+| 症状 | 根因 | 示例 |
+|---|---|---|
+| 箭头贴着框边「滑行」、指向错误 | 最后一段没有垂直进入节点边，draw.io 把折线裁到边框上 | ① |
+| 连线穿过无关模块 | 没有把节点当障碍物 | ② |
+| 标签被线压住 / 压在别的模块上 | 标签位置没有参与避让 | ③ |
+| 一串平行线挤成 10 px 间距 | 没有 bus lane 概念 | ④ |
+| 箭头前有个小 U 型回头钩 | 最后一个拐点离目标太近，留不出箭头长度 | ⑤ |
+| 连线绕大圈、多余折点 | 端点锚点与入线通道没对齐 | ⑥ |
 
 一张 500+ 节点的手工图靠肉眼修这些是不现实的。本工具把**诊断（人工/Agent）→ 修复（脚本）→ 验证（真实渲染）**拆开，每一处改动都有 before/after 记录。
 
@@ -83,21 +83,67 @@ python3 scripts/optimize.py --input atlas.drawio --layout preserve --repair-only
 
 脚本自带 `sys.path` 引导，**可以在任意目录下用绝对路径调用**。
 
-### 修复效果（before / after）
+### 修复效果：6 类典型症状（before / after）
 
-下面是一个刻意做坏的手工图：端点过冲、箭头前 U 型钩、8 折台阶、两条网只隔 9 px、连线直接穿过 Payment 模块。
+每组左边是刻意做坏的手工图，右边是 `optimize --layout preserve` 的**真实产出**（不是手工拼图）。节点位置与连线拓扑全程不变，只有端点锚点、折点和标签位置被重算。
 
-| before（11 findings，4 error） | after（9 处修复后：4 findings、0 error） |
+**① 箭头贴边滑行、指向错误 — R12**
+
+| before | after |
 |---|---|
-| ![修复前](docs/img/repair-before.png) | ![修复后](docs/img/repair-after.png) |
+| ![箭头贴边-前](docs/img/sym-01-before.png) | ![箭头贴边-后](docs/img/sym-01-after.png) |
+
+`01-terminal-sideways.drawio`：3 findings（含 1 个 R12 error）→ 0。连线沿着目标框的左边向上滑，箭头也指向边框方向，是 draw.io 最常见的错误画法。
+
+**② 连线穿过无关模块 — R02**
+
+| before | after |
+|---|---|
+| ![穿模块-前](docs/img/sym-02-before.png) | ![穿模块-后](docs/img/sym-02-after.png) |
+
+`02-wire-through-module.drawio`：R02 error + L01 error（线压在 Gateway 的文字上）→ 两者清零，仅余 1 条 P02 提示。
+
+**③ 标签被拖到别的模块上 — L07 / L02**
+
+| before | after |
+|---|---|
+| ![标签压模块-前](docs/img/sym-03-before.png) | ![标签压模块-后](docs/img/sym-03-after.png) |
+
+`03-label-on-module.drawio`：3 findings（L02 error、L07 warning、R01 warning）→ 0。标签回到自己的连线上，不再和 Cache 的模块名重叠。
+
+**④ 并行线挤成 8 px — R13**
+
+| before | after |
+|---|---|
+| ![并行线-前](docs/img/sym-04-before.png) | ![并行线-后](docs/img/sym-04-after.png) |
+
+`04-dense-parallel.drawio`：R13 ×2（8 px 间距、90 px 长）→ 清零，改为各自独立的通道；残余 2 条 R01 提示（末端 20 px 台阶）。
+
+**⑤ 箭头前的 U 型回头钩 — R14**
+
+| before | after |
+|---|---|
+| ![回头钩-前](docs/img/sym-05-before.png) | ![回头钩-后](docs/img/sym-05-after.png) |
+
+`05-terminal-hook.drawio`：3 findings（含 R14 error）→ 0。箭头前那段向外绕的 U 型凸起是 R14 的硬错误，必须修掉而不是降级成警告。
+
+**⑥ 舍直取弯的大绕行 — R01**
+
+| before | after |
+|---|---|
+| ![绕行-前](docs/img/sym-06-before.png) | ![绕行-后](docs/img/sym-06-after.png) |
+
+`06-long-detour.drawio`：R01 报告 4 个折点，连线 310 px（直线只要 150 px）→ 0，还原成一条直线。
 
 ```bash
-python3 scripts/optimize.py \
-  --input assets/examples/repair-demo-broken.drawio \
-  --out-dir out/repair-demo --layout preserve
+# 六组一起跑，逐组对比报告
+for f in assets/examples/symptoms/*.drawio; do
+  python3 scripts/optimize.py --input "$f" \
+    --out-dir "out/$(basename "$f" .drawio)" --layout preserve
+done
 ```
 
-节点位置与连线拓扑全程未变，只有端点锚点、折点和标签位置被重算；每一处改动都记在 `drc-report.json` 的 `input.options.wire_changes` 里。
+每处改动都记在 `drc-report.json` 的 `input.options.wire_changes` / `label_changes` 里，可以逐条核对。
 
 ### 模板示例
 
@@ -211,7 +257,7 @@ drawio-optimize/
 ├── agents/openai.yaml          # 技能展示信息
 ├── assets/
 │   ├── templates/*.yaml        # soc_dft / cpu_block / rtl_datapath / api_flow / microservices
-│   └── examples/               # 中文 TB 示例、修复演示用的「坏图」
+│   └── examples/               # 中文 TB 示例 + 6 组「症状」演示图（symptoms/）
 ├── docs/img/                   # README 配图
 ├── references/                 # 规则与决策依据（设计原则、变更契约、R/P/L 规则、格式、评分）
 ├── scripts/
