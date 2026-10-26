@@ -18,12 +18,12 @@
 
 | 症状 | 根因 | 示例 |
 |---|---|---|
-| 箭头贴着框边「滑行」、指向错误 | 最后一段没有垂直进入节点边，draw.io 把折线裁到边框上 | ① |
-| 连线穿过无关模块 | 没有把节点当障碍物 | ② |
-| 标签被线压住 / 压在别的模块上 | 标签位置没有参与避让 | ③ |
-| 一串平行线挤成 10 px 间距 | 没有 bus lane 概念 | ④ |
-| 箭头前有个小 U 型回头钩 | 最后一个拐点离目标太近，留不出箭头长度 | ⑤ |
-| 连线绕大圈、多余折点 | 端点锚点与入线通道没对齐 | ⑥ |
+| 箭头贴着框边「滑行」、指向错误 | 最后一段没有垂直进入节点边，draw.io 把折线裁到边框上 | ③ |
+| 连线穿过无关模块 | 没有把节点当障碍物 | ④ |
+| 标签被线压住 / 压在别的模块上 | 标签位置没有参与避让 | ⑤ |
+| 一串平行线挤成 10 px 间距 | 没有 bus lane 概念 | ⑥ |
+| 箭头前有个小 U 型回头钩 | 最后一个拐点离目标太近，留不出箭头长度 | ⑦ |
+| 连线绕大圈、多余折点 | 端点锚点与入线通道没对齐 | ⑧ |
 
 一张 500+ 节点的手工图靠肉眼修这些是不现实的。本工具把**诊断（人工/Agent）→ 修复（脚本）→ 验证（真实渲染）**拆开，每一处改动都有 before/after 记录。
 
@@ -83,81 +83,6 @@ python3 scripts/optimize.py --input atlas.drawio --layout preserve --repair-only
 
 脚本自带 `sys.path` 引导，**可以在任意目录下用绝对路径调用**。
 
-### 修复效果：6 类典型症状（before / after）
-
-每组左边是刻意做坏的手工图，右边是 `optimize --layout preserve` 的**真实产出**（不是手工拼图）。节点位置与连线拓扑全程不变，只有端点锚点、折点和标签位置被重算。
-
-**① 箭头贴边滑行、指向错误 — R12**
-
-| before | after |
-|---|---|
-| ![箭头贴边-前](docs/img/sym-01-before.png) | ![箭头贴边-后](docs/img/sym-01-after.png) |
-
-`01-terminal-sideways.drawio`：3 findings（含 1 个 R12 error）→ 0。连线沿着目标框的左边向上滑，箭头也指向边框方向，是 draw.io 最常见的错误画法。
-
-**② 连线穿过无关模块 — R02**
-
-| before | after |
-|---|---|
-| ![穿模块-前](docs/img/sym-02-before.png) | ![穿模块-后](docs/img/sym-02-after.png) |
-
-`02-wire-through-module.drawio`：R02 error + L01 error（线压在 Gateway 的文字上）→ 两者清零，仅余 1 条 P02 提示。
-
-**③ 标签被拖到别的模块上 — L07 / L02**
-
-| before | after |
-|---|---|
-| ![标签压模块-前](docs/img/sym-03-before.png) | ![标签压模块-后](docs/img/sym-03-after.png) |
-
-`03-label-on-module.drawio`：3 findings（L02 error、L07 warning、R01 warning）→ 0。标签回到自己的连线上，不再和 Cache 的模块名重叠。
-
-**④ 并行线挤成 8 px — R13**
-
-| before | after |
-|---|---|
-| ![并行线-前](docs/img/sym-04-before.png) | ![并行线-后](docs/img/sym-04-after.png) |
-
-`04-dense-parallel.drawio`：R13 ×2（8 px 间距、90 px 长）→ 清零，改为各自独立的通道；残余 2 条 R01 提示（末端 20 px 台阶）。
-
-**⑤ 箭头前的 U 型回头钩 — R14**
-
-| before | after |
-|---|---|
-| ![回头钩-前](docs/img/sym-05-before.png) | ![回头钩-后](docs/img/sym-05-after.png) |
-
-`05-terminal-hook.drawio`：3 findings（含 R14 error）→ 0。箭头前那段向外绕的 U 型凸起是 R14 的硬错误，必须修掉而不是降级成警告。
-
-**⑥ 舍直取弯的大绕行 — R01**
-
-| before | after |
-|---|---|
-| ![绕行-前](docs/img/sym-06-before.png) | ![绕行-后](docs/img/sym-06-after.png) |
-
-`06-long-detour.drawio`：R01 报告 4 个折点，连线 310 px（直线只要 150 px）→ 0，还原成一条直线。
-
-```bash
-# 六组一起跑，逐组对比报告
-for f in assets/examples/symptoms/*.drawio; do
-  python3 scripts/optimize.py --input "$f" \
-    --out-dir "out/$(basename "$f" .drawio)" --layout preserve
-done
-```
-
-每处改动都记在 `drc-report.json` 的 `input.options.wire_changes` / `label_changes` 里，可以逐条核对。
-
-### 模板示例
-
-| RTL datapath | Microservices |
-|---|---|
-| ![RTL datapath](docs/img/rtl-datapath.png) | ![Microservices](docs/img/microservices.png) |
-| `assets/templates/rtl_datapath.yaml`，12 节点 / 14 边 | `assets/templates/microservices.yaml`，10 节点 / 10 边 |
-
-另有 `soc_dft`、`cpu_block`、`api_flow` 三个模板与中文 TB 示例 `assets/examples/cjk_tb.yaml`。
-
-![中文标签 + TB 方向示例](docs/img/cjk-tb.png)
-
-*`assets/examples/cjk_tb.yaml`：中文标签用真实字体度量排版。跨容器下行线在容器标题带处仍有一段绕行（报告记为 `R11 info: 410px vs 160px direct`），属于已知限制，不是静默忽略的缺陷。*
-
 ### 产物
 
 | 文件 | 内容 |
@@ -172,7 +97,157 @@ done
 
 ---
 
-## 4. 命令参考
+## 4. 效果图
+
+下面每张 after 都是 `optimize` / `generate` 的**真实产出**，不是手工拼的示意图；数字来自同一次运行写出的 `drc-report.json`。
+
+### 生成与布局
+
+**① 一份 YAML → 一张图**
+
+```yaml
+direction: LR
+nodes:
+  - {id: client, label: Client,      kind: external}
+  - {id: gw,     label: API Gateway, kind: interface}
+  - {id: order,  label: Order Service, kind: controller}
+edges:
+  - {from: client, to: gw, label: request}
+  - {from: gw, to: order, label: create, signal: data}
+```
+
+![YAML 生成的流水线图](docs/img/gen-pipeline.png)
+
+*完整 spec 见 `assets/examples/micro_pipeline.yaml`；节点按 `kind` 取色，边按 `signal` 取线型，容器、端口和正交路径全部自动生成。*
+
+**② 同一份 spec，四种方向**
+
+![四种布局方向](docs/img/directions.png)
+
+*`--direction LR / RL / TB / BT`：分层、端口朝向、线型回退（反向边翻转）都跟着方向走，不需要改 spec。*
+
+### 连线修复
+
+**③ 箭头贴边滑行、指向错误 — R12**
+
+| before | after |
+|---|---|
+| ![箭头贴边-前](docs/img/sym-01-before.png) | ![箭头贴边-后](docs/img/sym-01-after.png) |
+
+`01-terminal-sideways.drawio`：3 findings（含 1 个 R12 error）→ 0。连线沿着目标框左边向上滑、箭头指向边框，是 draw.io 最常见的错误画法。
+
+**④ 连线穿过无关模块 — R02**
+
+| before | after |
+|---|---|
+| ![穿模块-前](docs/img/sym-02-before.png) | ![穿模块-后](docs/img/sym-02-after.png) |
+
+`02-wire-through-module.drawio`：R02 error + L01 error（线压在 Gateway 文字上）→ 两者清零，仅余 1 条 P02 提示。
+
+**⑤ 标签被拖到别的模块上 — L07 / L02**
+
+| before | after |
+|---|---|
+| ![标签压模块-前](docs/img/sym-03-before.png) | ![标签压模块-后](docs/img/sym-03-after.png) |
+
+`03-label-on-module.drawio`：3 findings（L02 error、L07 warning、R01 warning）→ 0。标签回到自己的连线上。
+
+**⑥ 并行线挤成 8 px — R13**
+
+| before | after |
+|---|---|
+| ![并行线-前](docs/img/sym-04-before.png) | ![并行线-后](docs/img/sym-04-after.png) |
+
+`04-dense-parallel.drawio`：R13 ×2（8 px 间距、90 px 长）→ 清零，改为各自独立的通道；残余 2 条 R01 提示（末端 20 px 台阶）。
+
+**⑦ 箭头前的 U 型回头钩 — R14**
+
+| before | after |
+|---|---|
+| ![回头钩-前](docs/img/sym-05-before.png) | ![回头钩-后](docs/img/sym-05-after.png) |
+
+`05-terminal-hook.drawio`：3 findings（含 R14 error）→ 0。R14 是硬错误，修不掉要让整次运行失败，不能降级成警告。
+
+**⑧ 舍直取弯的大绕行 — R01**
+
+| before | after |
+|---|---|
+| ![绕行-前](docs/img/sym-06-before.png) | ![绕行-后](docs/img/sym-06-after.png) |
+
+`06-long-detour.drawio`：R01 报告 4 个折点，连线 310 px（直线只要 150 px）→ 0。
+
+> 这 6 组用的是 `--layout preserve`：节点几何和连线拓扑不变，只重算锚点、折点、标签。大图上更保守的 `--repair-only` 连全局重布线都不做，只修端点/台阶/bus 间距/标签，越界即整批回滚。
+
+```bash
+# 各组一起跑，逐组看报告
+for f in assets/examples/symptoms/*.drawio; do
+  python3 scripts/optimize.py --input "$f" \
+    --out-dir "out/$(basename "$f" .drawio)" --layout preserve
+done
+```
+
+### 文字与版式
+
+**⑨ 长中文标签溢出 → 节点自动撑高 — L04**
+
+| before | after |
+|---|---|
+| ![文字溢出-前](docs/img/sym-07-before.png) | ![文字溢出-后](docs/img/sym-07-after.png) |
+
+`07-text-overflow.drawio`：L04 error + R01 warning → 0。文字用真实 CJK 字体度量（不是按字符数估），节点按实测宽高长大，不会压字也不会瞎撑。
+
+### 检测与验证
+
+**⑩ 报告能看懂，渲染能做证 — 不是「看起来没问题」**
+
+`drc-report.md` 的抬头（来自上面第 ⑨ 组的真实运行）：
+
+```
+Result: PASS
+Nodes 2 (+0 containers) · edges 1 · violations before 2 → after 0 · auto-fixed 2
+Direction LR · preset balanced · layout preserve
+```
+
+同一个 run 里，draw.io 导出的 SVG 会被逐条反解、和模型比对：
+
+```json
+"svg_check": {
+  "verified": true,
+  "edges_matched": 1,
+  "diagonal_segments": 0,
+  "endpoint_errors": { "e1": 2.24 },
+  "bend_mismatches": {},
+  "issues": []
+}
+```
+
+- `drc.violations_before` / `violations_after`：每条命中的规则、对象 id、坐标、证据。
+- `input.options.wire_changes` / `label_changes` / `node_changes`：每一处改动的 before/after。
+- `unfixed_*` 与 `limitations`：没修掉的、没验证的，逐条列出，不会被悄悄吞掉。
+
+### 内置模板
+
+![SoC DFT 架构](docs/img/soc-dft.png)
+
+*`assets/templates/soc_dft.yaml` — 8 节点 / 10 边、两个容器、控制/数据/时钟三类线型（即页面顶部首图）。*
+
+![RTL datapath](docs/img/rtl-datapath.png)
+
+*`assets/templates/rtl_datapath.yaml` — 12 节点 / 14 边，IF / ID / EX / MEM-WB 四个阶段。*
+
+![Microservices](docs/img/microservices.png)
+
+*`assets/templates/microservices.yaml` — 10 节点 / 10 边，网关、领域服务、数据与消息三块。*
+
+![中文标签 + TB 方向示例](docs/img/cjk-tb.png)
+
+*`assets/examples/cjk_tb.yaml` — 中文标签用真实字体度量排版；跨容器下行线在容器标题带处仍有一段绕行（报告记为 `R11 info: 410px vs 160px direct`），属已知限制，不是静默忽略的缺陷。*
+
+另有 `assets/templates/cpu_block.yaml` 与 `api_flow.yaml` 可直接跑。
+
+---
+
+## 5. 命令参考
 
 | 命令 | 作用 |
 |---|---|
@@ -185,7 +260,7 @@ done
 | `route` | 只重新分配端口并重布线 |
 | `render` | 导出 PNG/SVG，并对 SVG 做渲染路径校验 |
 | `validate` | 解析→写出→再解析 + id 保持 +（可选）再导出 |
-| `selftest` | 运行内置测试套件（49 项，无需 pytest） |
+| `selftest` | 运行内置测试套件（50 项，无需 pytest） |
 
 常用选项：
 
@@ -201,7 +276,7 @@ done
 
 ---
 
-## 5. 最小修复模式的安全边界
+## 6. 最小修复模式的安全边界
 
 `--repair-only` 是给「已经画好、只是有瑕疵」的大图准备的。它**不跑布局、不跑端口分配、不做全局重布线**，只允许：
 
@@ -225,7 +300,7 @@ done
 
 ---
 
-## 6. 质量契约（本工具的设计前提）
+## 7. 质量契约（本工具的设计前提）
 
 优先级从高到低，低优先级不得损害高优先级：
 
@@ -241,13 +316,13 @@ done
 
 ---
 
-## 7. 视觉风格（可选）
+## 8. 视觉风格（可选）
 
 内置引擎调色板（interface/controller/memory/datapath/clock… + data/control/clock/bus/power 线型）只是默认值。仓库同时提供一个完整的**个人风格 profile**（`references/t65-reference-style.md` + `t65-style-tokens.json`）：系统级浅色外框、深蓝标题条、中层浅色标题带、扁平矩形、`Noto Sans CJK SC` 可编辑文字。它以独立的「风格 pass」执行，和几何修复分开记录；不需要风格统一时可完全忽略。
 
 ---
 
-## 8. 目录结构
+## 9. 目录结构
 
 ```
 drawio-optimize/
@@ -257,13 +332,13 @@ drawio-optimize/
 ├── agents/openai.yaml          # 技能展示信息
 ├── assets/
 │   ├── templates/*.yaml        # soc_dft / cpu_block / rtl_datapath / api_flow / microservices
-│   └── examples/               # 中文 TB 示例 + 6 组「症状」演示图（symptoms/）
+│   └── examples/               # 中文 TB 示例、micro_pipeline.yaml、7 组演示图（symptoms/）
 ├── docs/img/                   # README 配图
 ├── references/                 # 规则与决策依据（设计原则、变更契约、R/P/L 规则、格式、评分）
 ├── scripts/
 │   ├── {doctor,generate,optimize,analyze,drc,layout,route,render,validate,selftest,selfcheck}.py
 │   └── drawio_optimize/        # 实现：layout / ports / router / drc / repair / svgcheck / pipeline …
-└── tests/                      # 49 个 unittest 用例
+└── tests/                      # 50 个 unittest 用例
 ```
 
 主要模块：
@@ -281,7 +356,7 @@ drawio-optimize/
 
 ---
 
-## 9. 作为 AI Agent Skill 安装
+## 10. 作为 AI Agent Skill 安装
 
 本仓库同时是一个 agent skill：`SKILL.md` 的 frontmatter 是入口，`references/` 是给模型的决策依据。
 
@@ -295,10 +370,10 @@ python3 ~/.codex/skills/drawio-optimize/scripts/doctor.py
 
 ---
 
-## 10. 开发与测试
+## 11. 开发与测试
 
 ```bash
-python3 scripts/selfcheck.py       # 49 tests, stdlib unittest，逐条打印
+python3 scripts/selfcheck.py       # 50 tests, stdlib unittest，逐条打印
 python3 scripts/selftest.py        # 同一套，走 CLI 子命令（-v 更详细）
 python3 scripts/validate.py --input out/diagram.drawio
 ```
@@ -316,7 +391,7 @@ done
 
 ---
 
-## 11. 已知限制（不隐藏）
+## 12. 已知限制（不隐藏）
 
 - 文本用真实字体度量 + 6% 安全余量，但浏览器换行仍可能与测量有细微差异，超长标签尤其如此。
 - 容器只是视觉分组：边可以穿过容器主体（报为 info），但不能压标题带；容器内部**不是**独立布线平面。
@@ -328,7 +403,7 @@ done
 
 ---
 
-## 12. 许可证
+## 13. 许可证
 
 [Apache License 2.0](LICENSE)，Copyright 2026 pengfaming。
 

@@ -1,0 +1,35 @@
+title: 请求处理流水线
+direction: LR
+nodes:
+  - id: client
+    label: Client
+    kind: external
+  - id: gw
+    label: API Gateway
+    kind: interface
+  - id: auth
+    label: Auth
+    kind: controller
+  - id: order
+    label: Order Service
+    kind: controller
+  - id: db
+    label: Orders DB
+    kind: memory
+edges:
+  - from: client
+    to: gw
+    label: request
+    signal: data
+  - from: gw
+    to: auth
+    label: token
+    signal: control
+  - from: gw
+    to: order
+    label: create
+    signal: data
+  - from: order
+    to: db
+    label: insert
+    signal: data
